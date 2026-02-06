@@ -26,6 +26,7 @@ const typeDefs = `
 
   type Query {
     users(name: String, email: String): [User!]!
+    user(id: ID!): User
   }
   
   type Mutation {
@@ -48,6 +49,10 @@ const resolvers = {
         params.push(`%${email}%`);
       }
       return db.prepare(query).all(...params);
+    },
+
+    user: (_, { id }) => {
+      return db.prepare("SELECT * FROM users WHERE id = ?").get(id);
     },
   },
 
